@@ -84,6 +84,8 @@ TEST_CASE("string view tests")
 
 TEST_CASE("benchmark")
 {
+	using namespace std::literals;
+
 	std::string s;
 	BENCHMARK("str_join a")
 	{
@@ -100,5 +102,17 @@ TEST_CASE("benchmark")
 	BENCHMARK("str_join a b c d")
 	{
 		s = str_join(".", "a", "b", "c", "d");
+	};
+	BENCHMARK("str_join 3 very long string literals")
+	{
+		s = str_join(".", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "ccccccccccccccccccccccccccccccccccccccccccccccccccc");
+	};
+	BENCHMARK("str_join 3 very long string views")
+	{
+		s = str_join(".", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"sv, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"sv, "ccccccccccccccccccccccccccccccccccccccccccccccccccc"sv);
+	};
+	BENCHMARK("str_join 3 very long strings")
+	{
+		s = str_join(".", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"s, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"s, "ccccccccccccccccccccccccccccccccccccccccccccccccccc"s);
 	};
 }
