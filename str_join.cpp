@@ -1,10 +1,12 @@
+#include <utility>
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
 
 #include <string>
 #include <string_view>
 
-std::string str_join_v([[ maybe_unused ]]std::string_view sep, auto... strings)
+template <typename ...Strings>
+std::string str_join_v([[ maybe_unused ]]std::string_view sep, Strings&&... strings)
 {
 	std::string buf;
 	([&](std::string_view str){
@@ -12,7 +14,7 @@ std::string str_join_v([[ maybe_unused ]]std::string_view sep, auto... strings)
 		{
 			(buf += str) += sep;
 		}
-	}(strings), ...);
+	}(std::forward<Strings>(strings)), ...);
 	if (!buf.empty())
 	{
 		buf.pop_back();
@@ -83,19 +85,19 @@ TEST_CASE("string view tests")
 TEST_CASE("benchmark")
 {
 	std::string s;
-	BENCHMARK("str_join 1")
+	BENCHMARK("str_join a")
 	{
 		s = str_join(".", "a");
 	};
-	BENCHMARK("str_join 2")
+	BENCHMARK("str_join a b")
 	{
 		s = str_join(".", "a", "b");
 	};
-	BENCHMARK("str_join 3")
+	BENCHMARK("str_join a b c")
 	{
 		s = str_join(".", "a", "b", "c");
 	};
-	BENCHMARK("str_join 4")
+	BENCHMARK("str_join a b c d")
 	{
 		s = str_join(".", "a", "b", "c", "d");
 	};
