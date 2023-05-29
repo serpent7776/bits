@@ -30,3 +30,9 @@ struct tuple
 
 	char buf[(sizeof(Ts) + ...)];
 };
+
+template <typename T, typename... Ts>
+T& get(const tuple<Ts...>& t)
+{
+	return {};
+}
