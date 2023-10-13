@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-,() { echo -n '['; }; .() { ,; ,(){ echo -n ☀️,\ ; }; if [ $# -eq 1 ]; then echo ☀️\ ]; else shift; $1 $*; fi; }; . . . . . . . . .
+s=[\ ; ,() { echo -n "$s"; }; .() { ,; s=☀️,\ ; if [ $# -eq 1 ]; then echo ☀️ ]; else $1 ${@:2}; fi; }; . . . . . . . . .
