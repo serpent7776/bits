@@ -1,6 +1,6 @@
 # Sunshine
 
-Produce the following output:
+Overengineered ways to produce the following output:
 
 ```
 [ ☀️, ☀️, ☀️, ☀️, ☀️, ☀️, ☀️, ☀️ ]
