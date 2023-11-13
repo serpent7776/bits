@@ -1,0 +1,21 @@
+#feature on choice new_decl_syntax tuple
+#include <iostream>
+#include <string>
+#include <tuple>
+
+fn fizzbuzz(n: int) -> std::string
+{
+    using namespace std::literals;
+    return match((n % 3, n % 5)) {
+        [0, 0] => "fizzbuzz"s;
+        [0, _] => "fizz"s;
+        [_, 0] => "buzz"s;
+        [_, _] => std::to_string(n);
+    };
+}
+
+fn main()
+{
+    for (var n: int = 1; n < 100; ++n)
+        std::cout << fizzbuzz(n) << '\n';
+}
