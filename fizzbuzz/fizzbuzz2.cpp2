@@ -1,0 +1,26 @@
+divisible_by_3: (p: std::pair<int, int>) -> bool = {
+    return p.first == 0 && p.second != 0;
+}
+divisible_by_5: (p: std::pair<int, int>) -> bool = {
+    return p.first != 0 && p.second == 0;
+}
+divisible_by_15: (p: std::pair<int, int>) -> bool = {
+    return p.first == 0 && p.second == 0;
+}
+
+fizzbuzz: (n: int) -> std::string = {
+    return inspect std::pair(n % 3, n % 5) -> std::string {
+        is (divisible_by_3) = std::string("fizz");
+        is (divisible_by_5) = std::string("buzz");
+        is (divisible_by_15) = std::string("fizzbuzz");
+        is _ = std::to_string(n);
+    };
+}
+
+main: () = {
+	v: std::vector<int> = ();
+	v.resize(100);
+	std::iota(v.begin(), v.end(), 1);
+	for v do (n)
+		std::cout << fizzbuzz(n) << '\n';
+}
