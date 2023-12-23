@@ -16,7 +16,7 @@ function f() {
 	for (i = 0; i < n; ++i) {
 		printf("%*s%s\n", n-i, "", s)
 		s = s "**"
-		system("sleep 0.00")
+		system("sleep 0.02")
 	}
 	print(s)
 	printf("\033[31m") # red
@@ -27,7 +27,7 @@ function f() {
 		x = 31 + int(rand() * (y - 2)) * sgn(2 * rand() - 1)
 		printf("\033["(33 + int(rand() * 5))"m") # color
 		printf("\033["y";"x"Ho") # goto (x,y)
-		system("sleep 0.00")
+		system("sleep 0.02")
 	}
 	printf("\033["(n+5)";"1"H") # goto (x,y)
 }

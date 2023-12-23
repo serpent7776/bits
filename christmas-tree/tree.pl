@@ -9,7 +9,7 @@ use warnings;
                                                                      ='\033[1;1H';$gr
                                                                   ='\033[32m';$re='\033'.
                                                               '[31m';$p='print';$P='printf';
-                                                            $n='\n';$w='system("sleep 0.00")';
+                                                            $n='\n';$w='system("sleep 0.02")';
                                                           $rd='rand()';$i='int';sub f {($F,$A)=
                                                         @_;$A||='';return "function $F($A)"} sub
                                                     r {return "return @_"} sub v {($R,$L)=@_; return
