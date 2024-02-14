@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Heart</title>
+		<style type="text/css" media="screen">
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height:  100vh;
+	background-color: #f0f0f0; /* Light gray background */
+}
+
+.heart {
+	height:  100px;
+	width:  100px;
+	background-color: crimson;
+	transform: rotate(-45deg);
+	position: relative;
+	animation: heartbeat  1s infinite;
+}
+
+.heart::before,
+.heart::after {
+	content: "";
+	height:  100px;
+	width:  100px;
+	background-color: crimson;
+	border-radius:  50%;
+	position: absolute;
+}
+
+.heart::before {
+	top: -50px;
+	left:  0px;
+}
+
+.heart::after {
+	left:  50px;
+	top:  0px;
+}
+
+@keyframes heartbeat {
+	0% {
+		transform: scale(1) rotate(-45deg);
+	}
+
+	25% {
+		transform: scale(1.25) rotate(-45deg);
+	}
+
+	45% {
+		transform: scale(1.5) rotate(-45deg);
+	}
+
+	60%,  100% {
+		transform: scale(1) rotate(-45deg);
+	}
+}
+		</style>
+	</head>
+	<body>
+		<div class="heart"></div>
+	</body>
+</html>
