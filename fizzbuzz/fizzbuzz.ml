@@ -6,5 +6,5 @@ let fizzbuzz n =
         | (_, _) -> string_of_int n
 
 let () = for n = 1 to 100 do
-        Printf.printf "%s\n" (fizzbuzz n)
+        print_endline (fizzbuzz n)
 done
