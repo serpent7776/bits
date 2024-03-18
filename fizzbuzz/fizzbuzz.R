@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
-df <- data.frame(number = 1:100, result = as.character(1:100))
-df$result[df$number %% 3 == 0] <- "fizz"
-df$result[df$number %% 5 == 0] <- "buzz"
-df$result[df$number %% 15 == 0] <- "fizzbuzz"
-cat(paste(df$result, collapse="\n"), sep="\n")
+c <- 1:100
+c[seq(0, 100, 3)[-1]] <- "fizz"
+c[seq(0, 100, 5)[-1]] <- "buzz"
+c[seq(0, 100, 15)[-1]] <- "fizzbuzz"
+cat(paste(c, collapse="\n"), sep="\n")
