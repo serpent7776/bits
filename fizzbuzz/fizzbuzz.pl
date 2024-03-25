@@ -3,4 +3,4 @@ use strict;
 use warnings;
 use feature 'say';
 
-say for map {($_, 'fizz', 'buzz', 'fizzbuzz')[($_%3==0) + 2*($_%5==0)]} 1..100
+say for map {('', 'fizz')[$_%3==0].('', 'buzz')[$_%5==0] || $_} 1..100
