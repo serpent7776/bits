@@ -1,2 +1,2 @@
 #!/usr/bin/env bqn
-•Out¨ {{(0=3|𝕩) + 2×0=5|𝕩}◶⟨{𝕩}, {"fizz"}, {"buzz"}, {"fizzbuzz"}⟩}¨ 1+↕100
+•Out¨ {+´1‿2×0=3‿5|𝕩}◶{𝕩}‿{"fizz"}‿{"buzz"}‿{"fizzbuzz"}¨ 1+↕100
