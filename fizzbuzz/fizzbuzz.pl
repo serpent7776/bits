@@ -3,4 +3,4 @@ use strict;
 use warnings;
 use feature 'say';
 
-say for map {'fizz' x ($_%3==0) . 'buzz' x ($_%5==0) || $_} 1..100
+say 'fizz' x !($_%3) . 'buzz' x !($_%5) || $_ for 1..100
