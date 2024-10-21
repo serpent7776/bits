@@ -13,7 +13,7 @@ rn <- 4 # Thursday
 
 is_leap <- function(y) (y %% 4 == 0 && y %% 100 != 0) || y %% 400 == 0
 leaps <- sum(sapply(1970:y, is_leap))
-dd <- (d-1) + sum((M)[1:m]) + (y-ry) * 365 + leaps
+dd <- (d-1) + sum((M)[1:m]) + (y-ry) * 365 + leaps + (-1 * (is_leap(y) && m %in% c(1,2)))
 
 days <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
-print(days[(dd %% 7) + (1 - rn + 7)])
+print(days[1 + (dd + 7 - rn) %% 7])
