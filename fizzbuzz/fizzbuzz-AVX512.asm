@@ -26,6 +26,13 @@ section .bss
 section .text
 global _start
 
+; exit with a failure code N
+; Fail N
+%macro Fail 1
+    mov     rdi, %1
+    jmp fail
+%endmacro
+
 ; byte to string
 ; in al input byte
 ; out rax points to buffer with string
@@ -84,6 +91,8 @@ stob:
 	; mul cl
 	mov ch, byte[rsi]
 	sub ch, '0'
+	cmp ch, 9
+	ja .err
 	add al, ch
 	inc rsi
 	cmp rdi, rsi
@@ -91,6 +100,8 @@ stob:
 	mul cl
 	mov ch, byte[rsi]
 	sub ch, '0'
+	cmp ch, 9
+	ja .err
 	add al, ch
 	inc rsi
 	cmp rdi, rsi
@@ -98,12 +109,16 @@ stob:
 	mul cl
 	mov ch, byte[rsi]
 	sub ch, '0'
+	cmp ch, 9
+	ja .err
 	add al, ch
 	; inc rsi
 	; cmp rdi, rsi
 	; je .done
 .done:
 	ret
+.err:
+	Fail 1
 
 ; prints buffer in rsi to stdout
 ; Sys_write0
@@ -306,7 +321,10 @@ _start:
 	jmp .batch
 .done:
 
+; Exit successfully
 exit:
-	mov rax, 60
 	xor rdi, rdi
+; exit with error code in rdi
+fail:
+	mov rax, 60
 	syscall
