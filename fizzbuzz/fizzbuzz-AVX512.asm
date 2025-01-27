@@ -1,12 +1,14 @@
 ; nasm -f elf64 -g fizzbuzz-AVX512.asm
 ; ld fizzbuzz-AVX512.o
 ; ./a.out 21
+; exits with error code 1 if argument is not a number
+; exits with error code 2 if argument is outside allowed range
 
 section .rodata:
 	usage:
 	db "Usage: fizzbuzz <N>", 10
 	db "Prints fizzbuzz starting at 1 and ending at N", 10
-	db "Handles N up to 255", 10
+	db "Handles N between 1 and 255", 10
 	usage_len: equ $-usage
 
 section .rodata:
@@ -84,41 +86,50 @@ stob:
 	setne al
 	add rdi, rax
 	cmp rsi, rdi
-	je .done
+	jz .done
+	cmp byte[rdi], 0
+	jnz .range
 
-	mov cl, 10
+	mov dl, 10
 	xor ax, ax
-	; mul cl
-	mov ch, byte[rsi]
-	sub ch, '0'
-	cmp ch, 9
+	xor cx, cx
+	; mul dl
+	mov cl, byte[rsi]
+	sub cl, '0'
+	cmp cl, 9
 	ja .err
-	add al, ch
+	add ax, cx
 	inc rsi
 	cmp rdi, rsi
 	je .done
-	mul cl
-	mov ch, byte[rsi]
-	sub ch, '0'
-	cmp ch, 9
+	mul dl
+	mov cl, byte[rsi]
+	sub cl, '0'
+	cmp cl, 9
 	ja .err
-	add al, ch
+	add ax, cx
 	inc rsi
 	cmp rdi, rsi
 	je .done
-	mul cl
-	mov ch, byte[rsi]
-	sub ch, '0'
-	cmp ch, 9
+	mul dl
+	mov cl, byte[rsi]
+	sub cl, '0'
+	cmp cl, 9
 	ja .err
-	add al, ch
+	add ax, cx
 	; inc rsi
 	; cmp rdi, rsi
 	; je .done
 .done:
+	cmp ax, 0
+	jz .range
+	cmp ax, 255
+	ja .range
 	ret
 .err:
 	Fail 1
+.range:
+	Fail 2
 
 ; prints buffer in rsi to stdout
 ; Sys_write0
