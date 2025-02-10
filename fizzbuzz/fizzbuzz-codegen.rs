@@ -18,6 +18,7 @@ static CALL_RAX: [u8; 2] = [0xFF, 0xD0];
 static PUSH_R12: [u8; 2] = [0x41, 0x54];
 static POP_R12: [u8; 2] = [0x41, 0x5c];
 static RET: u8 = 0xC3;
+static NOP: u8 = 0x90;
 
 static FIZZ: &str = "fizz";
 static BUZZ: &str = "buzz";
@@ -99,7 +100,7 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     }
 
-    let required_bytes: i64 = (12 + 50 * n + 3).into();
+    let required_bytes: i64 = (16 + 74 * n + 3).into();
     let num_pages = required_bytes / pagesize + 1;
 
     let size:usize = (pagesize * num_pages).try_into()?;
@@ -113,6 +114,12 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
             0)
     };
 
+    fn nop(m: *mut u8) -> *mut u8 {
+        unsafe {
+            *m = NOP;
+            m.offset(1)
+        }
+    }
     fn byte(m: *mut u8, b: u8) -> *mut u8 {
         unsafe {
             *m = b;
@@ -141,35 +148,62 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut len:u64 = 0;
 
     m = bytes(m, PUSH_R12);
+    m = nop(m); m = nop(m); m = nop(m); m = nop(m);
     m = byte(m, REX_WB); m = byte(m, MOV_R12); m = qword(m, puts as usize as u64);
     for i in 1..=n {
         let f:i32 = (i % 3 == 0).into();
         let b:i32 = (i % 5 == 0).into();
         match (b << 1) | f {
             0b00 => {
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RAX); m = qword(m, itoa as usize as u64);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RDI); m = qword(m, i as u64);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RSI); m = qword(m, &mut len as *mut u64 as usize as u64);
+                m = nop(m);
                 m = bytes(m, CALL_RAX);
                 m = byte(m, REX_W); m = bytes(m, MOV_RDI_RAX);
                 m = byte(m, REX_W); m = byte(m, MOV_RAX); m = qword(m, &mut len as *mut u64 as usize as u64);
                 m = byte(m, REX_W); m = bytes(m, MOV_RSI_RAX_REF);
                 m = byte(m, REX_B); m = bytes(m, CALL_R12);
+                m = nop(m); m = nop(m);
             },
             0b01 => {
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RDI); m = qword(m, FIZZ.as_ptr() as usize as u64);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RSI); m = qword(m, FIZZ.len() as u64);
                 m = byte(m, REX_B); m = bytes(m, CALL_R12);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m);
             },
             0b10 => {
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RDI); m = qword(m, BUZZ.as_ptr() as usize as u64);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RSI); m = qword(m, BUZZ.len() as u64);
                 m = byte(m, REX_B); m = bytes(m, CALL_R12);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m);
             },
             0b11 => {
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RDI); m = qword(m, FIZZBUZZ.as_ptr() as usize as u64);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m); m = nop(m);
                 m = byte(m, REX_W); m = byte(m, MOV_RSI); m = qword(m, FIZZBUZZ.len() as u64);
                 m = byte(m, REX_B); m = bytes(m, CALL_R12);
+                m = nop(m); m = nop(m); m = nop(m); m = nop(m);
+                m = nop(m);
             },
             _ => panic!(),
         }

@@ -27,6 +27,7 @@ static const unsigned char CALL_RAX[] = {0xFF, 0xD0};
 static const unsigned char PUSH_R12[] = {0x41, 0x54};
 static const unsigned char POP_R12[] = {0x41, 0x5c};
 static const unsigned char RET = 0xC3;
+static const unsigned char NOP = 0x90;
 
 static const char* fizz = "fizz";
 static const char* buzz = "buzz";
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	const size_t bytes = 12 + 26 * n + 3;
+	const size_t bytes = 16 + 40 * n + 3;
 	const size_t num_pages = bytes / pagesize + 1;
 
 	unsigned char* page = mmap(NULL, pagesize * num_pages, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -75,6 +76,7 @@ int main(int argc, char *argv[])
 	}
 
 	unsigned char* m = page;
+	*(m++) = NOP; *(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
 	*(m++) = PUSH_R12[0]; *(m++) = PUSH_R12[1];
 	*(m++) = REX_WB; *(m++) = MOV_R12; *(int (**)(const char *))m = puts; m+=8;
 	for (int i = 1; i <= n; i++)
@@ -84,23 +86,39 @@ int main(int argc, char *argv[])
 		switch((b << 1) | f)
 		{
 			case 0b00:
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
 				*(m++) = REX_W; *(m++) = MOV_RAX; *(char*(**)(size_t))m = itoa; m+=8;
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
 				*(m++) = REX_W; *(m++) = MOV_RDI; *(size_t*)m = i; m+=8;
 				*(m++) = CALL_RAX[0]; *(m++) = CALL_RAX[1];
 				*(m++) = REX_W; *(m++) = MOV_RDI_RAX[0]; *(m++) = MOV_RDI_RAX[1];
 				*(m++) = REX_B; *(m++) = CALL_R12[0]; *(m++) = CALL_R12[1];
 				break;
 			case 0b01:
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
 				*(m++) = REX_W; *(m++) = MOV_RDI; *(const char**)m = fizz; m+=8;
 				*(m++) = REX_B; *(m++) = CALL_R12[0]; *(m++) = CALL_R12[1];
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP;
 				break;
 			case 0b10:
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
 				*(m++) = REX_W; *(m++) = MOV_RDI; *(const char**)m = buzz; m+=8;
 				*(m++) = REX_B; *(m++) = CALL_R12[0]; *(m++) = CALL_R12[1];
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP;
 				break;
 			case 0b11:
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
 				*(m++) = REX_W; *(m++) = MOV_RDI; *(const char**)m = fizzbuzz; m+=8;
 				*(m++) = REX_B; *(m++) = CALL_R12[0]; *(m++) = CALL_R12[1];
+				*(m++) = NOP; *(m++) = NOP; *(m++) = NOP;
+				*(m++) = NOP; *(m++) = NOP;
 				break;
 			default: abort();
 		}
