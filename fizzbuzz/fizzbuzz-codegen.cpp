@@ -98,16 +98,9 @@ int main(int argc, char *argv[])
 	if (n == 0) exit(0);
 	if (n < 0) exit(1);
 
-	const size_t pagesize = sysconf(_SC_PAGESIZE);
-	if (pagesize == (size_t)-1) {
-		perror("sysconf");
-		exit(EXIT_FAILURE);
-	}
-
 	const size_t bytes = 16 + 40 * n + 3;
-	const size_t num_pages = bytes / pagesize + 1;
 
-	unsigned char* page = (unsigned char*)mmap(nullptr, pagesize * num_pages, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	unsigned char* page = (unsigned char*)mmap(nullptr, bytes, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 	if (page == MAP_FAILED) {
 		perror("mmap");
 		exit(EXIT_FAILURE);
@@ -173,7 +166,7 @@ int main(int argc, char *argv[])
 	}
 	push(m, POP_R12, RET);
 
-	if (mprotect((void*)page, pagesize * num_pages, PROT_READ|PROT_EXEC) != 0) {
+	if (mprotect((void*)page, bytes, PROT_READ|PROT_EXEC) != 0) {
 		perror("mprotect");
 		exit(EXIT_FAILURE);
 	}
