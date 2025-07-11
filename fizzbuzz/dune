@@ -1,0 +1,1 @@
+(executable (name fizzbuzz_codegen) (libraries ctypes ctypes.foreign unix) (foreign_stubs (language c) (names stub)) (flags (:standard)) )
