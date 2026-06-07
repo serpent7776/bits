@@ -11,10 +11,12 @@ std::common_type_t<Ts...> coalesce(Ts&&... ts) {
 
 int main()
 {
+	int i;
 	std::cout << coalesce(0, 1, 2, 3) << '\n';
 	std::cout << coalesce(1, 2, 3) << '\n';
 	std::cout << coalesce(2, 3) << '\n';
 	std::cout << coalesce(0, 3) << '\n';
 	std::cout << coalesce(0, 0, 0, 0, -1) << '\n';
 	std::cout << coalesce(0, 0, 0, 0, 0) << '\n';
+	std::cout << coalesce(nullptr, nullptr, nullptr, &i) << '\n';
 }
